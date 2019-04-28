@@ -43,7 +43,7 @@ client.on('message', async message => {
     .then(data => {return request(`https://jp1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${JSON.parse(data).id}?api_key=${riotKey}`)})
     .then(data => parseSummonerMasterys(JSON.parse(data), count))
     .then(data => createRichEmbed(data, plainSN))
-    .then(data => message.channel.send(data))
+    .then(data => data ? message.channel.send(data) : null)
     .catch(err => err.statusCode === 404 ? message.channel.send("We coudn't find summoner with that name in JP server.") : console.error(err));
   }
 
@@ -67,6 +67,11 @@ client.on('message', async message => {
   }
 
   async function createRichEmbed (data, plainSN) {
+
+    if (data == undefined) {
+      return;
+    }
+
     const keys = Object.keys(data);
 
     const embedMessage = new Discord.RichEmbed()
