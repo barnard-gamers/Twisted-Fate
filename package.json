@@ -1,7 +1,6 @@
 {
   "name": "TwistedFate",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,8 +9,20 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "discord.js": "^11.4.2",
+    "dotenv": "^7.0.0",
     "encoding-japanese": "^1.0.29",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hxdegawa/Twisted-Fate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hxdegawa/Twisted-Fate/issues"
+  },
+  "homepage": "https://github.com/hxdegawa/Twisted-Fate#readme",
+  "description": ""
 }
