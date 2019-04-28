@@ -15,7 +15,19 @@ client.on('ready', () => {
 client.on('message', async message => {
   const fullContents = message.content.trim().split(" ");
 
-  if (fullContents[0] === "!get" && fullContents.join(" ").match(" -n")) {
+  if (fullContents[0] ===".help") {
+    const embedMessage = new Discord.RichEmbed();
+
+    embedMessage.setAuthor("Hi! I'm Twisted Fate!", "http://raw.communitydragon.org/latest/game/assets/characters/twistedfate/hud/twistedfate_circle_11.png")
+                .setColor(0x575fcf)
+                .setTitle("USAGE:")
+                .addField("Get summoner's 3 main champions and those datas", "`.get [Summoner name]`")
+                .addField("Get summoner's main champions more/less than 3 times", "`.get -n [Summoner name] [count]`");
+
+    message.channel.send(embedMessage);
+  }
+
+  if (fullContents[0] === ".get" && fullContents.join(" ").match(" -n")) {
     fullContents.splice(0, 2);
     const count = parseInt(fullContents[fullContents.length - 1], 10);
 
@@ -30,9 +42,7 @@ client.on('message', async message => {
     fullContents.pop();
     const encodedSummonerName = encoding.urlEncode(fullContents.join(" "));
     analyzeMatchData(encodedSummonerName, count, fullContents.join(" "));
-  }
-
-  if (fullContents[0] === "!get" && fullContents[1]) {
+  } else if (fullContents[0] === ".get" && fullContents[1]) {
     fullContents.shift();
     const encodedSummonerName = encoding.urlEncode(fullContents.join(" "));
     analyzeMatchData(encodedSummonerName, 3, fullContents.join(" "));
@@ -84,7 +94,7 @@ client.on('message', async message => {
         "Mastery level" : data[key].championLevel,
         "Mastery points": data[key].championPoints,
         "Tokens owned"  : data[key].tokensEarned,
-        "op.gg URL"     : `[${key}](http://jp.op.gg/champion/${key})`
+        "OP.GG"     : `[${key}](https://jp.op.gg/champion/${key})`
       };
 
       content["Mastery level"] = `mastery${content["Mastery level"]}`
@@ -94,6 +104,7 @@ client.on('message', async message => {
                 .replace(/,/gi, "\n")
                 .replace(/"/gi, " ")
                 .replace(/:/gi, ": ")
+                .replace(/https: /g, "https:")
                 .replace(/mastery1/i, message.guild.emojis.find(emoji => emoji.name === "mastery1"))
                 .replace(/mastery2/i, message.guild.emojis.find(emoji => emoji.name === "mastery2"))
                 .replace(/mastery3/i, message.guild.emojis.find(emoji => emoji.name === "mastery3"))
