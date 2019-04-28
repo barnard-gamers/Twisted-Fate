@@ -43,11 +43,18 @@ client.on('message', async message => {
     .then(data => {return request(`https://jp1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${JSON.parse(data).id}?api_key=${riotKey}`)})
     .then(data => parseSummonerMasterys(JSON.parse(data), count))
     .then(data => createRichEmbed(data, plainSN))
-    .then(data => message.channel.send(data));
+    .then(data => message.channel.send(data))
+    .catch(err => err.statusCode === 404 ? message.channel.send("We coudn't find summoner with that name in JP server.") : console.error(err));
   }
 
   async function parseSummonerMasterys (masteryData, count) {
     const topUsedChampions = {};
+
+    if(count > masteryData.length) {
+      message.channel.send("That player doesn't have enough data to analyze...");
+      return;
+    }
+
     for (let i = 0; i < count; i ++) {
 
       const champion = JSON.parse(await request(`https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/champions/${masteryData[i].championId}.json`)).name;
@@ -75,29 +82,17 @@ client.on('message', async message => {
         "op.gg URL"     : `[${key}](http://jp.op.gg/champion/${key})`
       };
 
-      switch (content["Mastery level"]) {
-        case 5:
-          content["Mastery level"] = "mastery5";
-          break;
-
-        case 6:
-          content["Mastery level"] = "mastery6";
-          break;
-
-        case 7:
-          content["Mastery level"] = "mastery7";
-          break;
-
-        default:
-          content["Mastery level"] = data[key].championLevel;
-          break;
-      }
+      content["Mastery level"] = `mastery${content["Mastery level"]}`
 
       content = JSON.stringify(content)
                 .slice(1, JSON.stringify(content).length - 1)
                 .replace(/,/gi, "\n")
                 .replace(/"/gi, " ")
                 .replace(/:/gi, ": ")
+                .replace(/mastery1/i, message.guild.emojis.find(emoji => emoji.name === "mastery1"))
+                .replace(/mastery2/i, message.guild.emojis.find(emoji => emoji.name === "mastery2"))
+                .replace(/mastery3/i, message.guild.emojis.find(emoji => emoji.name === "mastery3"))
+                .replace(/mastery4/i, message.guild.emojis.find(emoji => emoji.name === "mastery4"))
                 .replace(/mastery5/i, message.guild.emojis.find(emoji => emoji.name === "mastery5"))
                 .replace(/mastery6/i, message.guild.emojis.find(emoji => emoji.name === "mastery6"))
                 .replace(/mastery7/i, message.guild.emojis.find(emoji => emoji.name === "mastery7"));
