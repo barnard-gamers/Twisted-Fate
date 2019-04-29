@@ -94,7 +94,7 @@ client.on('message', async message => {
         "Mastery level" : data[key].championLevel,
         "Mastery points": data[key].championPoints,
         "Tokens owned"  : data[key].tokensEarned,
-        "OP.GG"     : `[${key}](https://jp.op.gg/champion/${encoding.urlEncode(key)})`
+        "OP.GG"     : `[${key}](https://jp.op.gg/champion/${key.split(" ").join("")})`
       };
 
       content["Mastery level"] = `mastery${content["Mastery level"]}`
