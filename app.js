@@ -85,7 +85,7 @@ client.on('message', async message => {
     const keys = Object.keys(data);
 
     const embedMessage = new Discord.RichEmbed()
-          .setAuthor(`${plainSN}'s main champion is ${keys[0]}!`, `http://opgg-static.akamaized.net/images/lol/champion/${keys[0]}.png`)
+          .setAuthor(`${plainSN}'s main champion is ${keys[0]}!`, `http://opgg-static.akamaized.net/images/lol/champion/${keys[0].replace(" ", "")}.png`)
           .setTitle(`Champion ranking is below:`)
           .setColor(0x4bcffa);
 
@@ -94,7 +94,7 @@ client.on('message', async message => {
         "Mastery level" : data[key].championLevel,
         "Mastery points": data[key].championPoints,
         "Tokens owned"  : data[key].tokensEarned,
-        "OP.GG"     : `[${key}](https://jp.op.gg/champion/${key.split(" ").join("")})`
+        "OP.GG"     : `[${key}](https://jp.op.gg/champion/${key.replace(" ", "")})`
       };
 
       content["Mastery level"] = `mastery${content["Mastery level"]}`
